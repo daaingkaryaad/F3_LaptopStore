@@ -28,8 +28,6 @@ func NewStore() *Store {
 	}
 }
 
-/* ---------------- Products ---------------- */
-
 func (s *Store) ListProducts() []model.Product {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -82,8 +80,6 @@ func (s *Store) DeleteProduct(id int) bool {
 	return true
 }
 
-/* ---------------- Cart ---------------- */
-
 func (s *Store) AddToCart(userID, laptopID, qty int) model.Cart {
 	if qty <= 0 {
 		qty = 1
@@ -104,8 +100,6 @@ func (s *Store) GetCart(userID int) model.Cart {
 	defer s.mu.RUnlock()
 	return s.Carts[userID]
 }
-
-/* ---------------- Orders ---------------- */
 
 func (s *Store) CreateOrderFromCart(userID int) (model.Order, error) {
 	s.mu.Lock()

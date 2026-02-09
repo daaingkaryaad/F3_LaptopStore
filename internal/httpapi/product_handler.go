@@ -19,8 +19,8 @@ func NewProductHandler(st *store.Store) *ProductHandler {
 }
 
 func (h *ProductHandler) Register(mux *http.ServeMux) {
-	mux.HandleFunc("/api/laptops", h.handleLaptops)     // GET, POST
-	mux.HandleFunc("/api/laptops/", h.handleLaptopByID) // GET, PUT, DELETE
+	mux.HandleFunc("/api/laptops", h.handleLaptops)
+	mux.HandleFunc("/api/laptops/", h.handleLaptopByID)
 }
 
 func (h *ProductHandler) handleLaptops(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +30,10 @@ func (h *ProductHandler) handleLaptops(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, 200, h.store.ListProducts())
 
 	case http.MethodPost:
+		if r.Header.Get("X-Role") != "admin" {
+			writeError(w, 403, "forbidden")
+			return
+		}
 		var p model.Product
 		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
 			writeError(w, 400, "bad json")
@@ -62,6 +66,10 @@ func (h *ProductHandler) handleLaptopByID(w http.ResponseWriter, r *http.Request
 		writeJSON(w, 200, p)
 
 	case http.MethodPut:
+		if r.Header.Get("X-Role") != "admin" {
+			writeError(w, 403, "forbidden")
+			return
+		}
 		var p model.Product
 		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
 			writeError(w, 400, "bad json")
@@ -75,6 +83,10 @@ func (h *ProductHandler) handleLaptopByID(w http.ResponseWriter, r *http.Request
 		writeJSON(w, 200, updated)
 
 	case http.MethodDelete:
+		if r.Header.Get("X-Role") != "admin" {
+			writeError(w, 403, "forbidden")
+			return
+		}
 		if ok := h.store.DeleteProduct(id); !ok {
 			writeError(w, 404, "not found")
 			return

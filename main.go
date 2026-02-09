@@ -18,11 +18,10 @@ func main() {
 	cartH := httpapi.NewCartHandlers(st)
 	orderH := httpapi.NewOrderHandlers(st)
 
-	mux.Handle("/api/cart/items", httpapi.WithUser(http.HandlerFunc(cartH.AddToCart)))
-	mux.Handle("/api/cart", httpapi.WithUser(http.HandlerFunc(cartH.GetCart)))
-	mux.Handle("/api/orders", httpapi.WithUser(http.HandlerFunc(orderH.CreateOrder)))
+	mux.Handle("/api/cart/items", httpapi.WithUser(httpapi.RequireRole("user", http.HandlerFunc(cartH.AddToCart))))
+	mux.Handle("/api/cart", httpapi.WithUser(httpapi.RequireRole("user", http.HandlerFunc(cartH.GetCart))))
+	mux.Handle("/api/orders", httpapi.WithUser(httpapi.RequireRole("user", http.HandlerFunc(orderH.CreateOrder))))
 
 	fmt.Println("server :8080")
 	http.ListenAndServe(":8080", mux)
-
 }
