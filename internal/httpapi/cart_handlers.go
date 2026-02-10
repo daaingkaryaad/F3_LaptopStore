@@ -16,24 +16,34 @@ func NewCartHandlers(s *store.Store) *CartHandlers {
 }
 
 type addCartReq struct {
-	UserID   int `json:"user_id"`
 	LaptopID int `json:"laptop_id"`
 	Quantity int `json:"quantity"`
 }
 
 func (h *CartHandlers) AddToCart(w http.ResponseWriter, r *http.Request) {
+	userID, ok := UserIDFromContext(r.Context())
+	if !ok {
+		writeError(w, 401, "no user")
+		return
+	}
+
 	var req addCartReq
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, 400, "invalid json")
 		return
 	}
 
-	cart := h.store.AddToCart(req.UserID, req.LaptopID, req.Quantity)
+	cart, err := h.store.AddToCart(userID, req.LaptopID, req.Quantity)
+	if err != nil {
+		writeError(w, 400, err.Error())
+		return
+	}
+
 	writeJSON(w, 200, cart)
 }
 
 func (h *CartHandlers) GetCart(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value(CtxUserID).(int)
+	userID, ok := UserIDFromContext(r.Context())
 	if !ok {
 		writeError(w, 401, "no user")
 		return

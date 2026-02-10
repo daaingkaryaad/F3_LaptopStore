@@ -14,6 +14,17 @@ func NewOrderHandlers(s *store.Store) *OrderHandlers {
 	return &OrderHandlers{store: s}
 }
 
+func (h *OrderHandlers) HandleOrders(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		h.CreateOrder(w, r)
+	case http.MethodGet:
+		h.ListOrders(w, r)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
 func (h *OrderHandlers) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	userID, ok := r.Context().Value(CtxUserID).(int)
 	if !ok {
