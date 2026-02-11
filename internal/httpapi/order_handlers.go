@@ -26,7 +26,7 @@ func (h *OrderHandlers) HandleOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *OrderHandlers) CreateOrder(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value(CtxUserID).(int)
+	userID, ok := UserIDFromContext(r.Context())
 	if !ok {
 		writeError(w, 401, "no user")
 		return
@@ -42,11 +42,17 @@ func (h *OrderHandlers) CreateOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *OrderHandlers) ListOrders(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value(CtxUserID).(int)
+	userID, ok := UserIDFromContext(r.Context())
 	if !ok {
 		writeError(w, 401, "no user")
 		return
 	}
 
-	writeJSON(w, 200, h.store.ListOrders(userID))
+	orders, err := h.store.ListOrders(userID)
+	if err != nil {
+		writeError(w, 500, "failed to list orders")
+		return
+	}
+
+	writeJSON(w, 200, orders)
 }

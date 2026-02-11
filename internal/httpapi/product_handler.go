@@ -18,20 +18,25 @@ func NewProductHandler(st *store.Store) *ProductHandler {
 	return &ProductHandler{store: st}
 }
 
-func (h *ProductHandler) Register(mux *http.ServeMux) {
-	mux.HandleFunc("/api/laptops", h.HandleLaptops)
-	mux.HandleFunc("/api/laptops/", h.HandleLaptopByID)
-	mux.HandleFunc("/api/laptops/compare", h.HandleCompare)
-}
-
 func (h *ProductHandler) HandleLaptops(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-
 	case http.MethodGet:
-		writeJSON(w, 200, h.store.ListProducts())
+		filter := productFilterFromQuery(r)
+		products, err := h.store.ListProducts(filter)
+		if err != nil {
+			writeError(w, 500, "failed to list products")
+			return
+		}
+		writeJSON(w, 200, products)
 
 	case http.MethodPost:
-		var p model.Product
+		role, _ := RoleFromContext(r.Context())
+		if role != "admin" {
+			writeError(w, 403, "forbidden")
+			return
+		}
+
+		var p model.Laptop
 		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
 			writeError(w, 400, "bad json")
 			return
@@ -40,7 +45,11 @@ func (h *ProductHandler) HandleLaptops(w http.ResponseWriter, r *http.Request) {
 			writeError(w, 400, err.Error())
 			return
 		}
-		created := h.store.CreateProduct(p)
+		created, err := h.store.CreateProduct(p)
+		if err != nil {
+			writeError(w, 500, "create failed")
+			return
+		}
 		writeJSON(w, 201, created)
 
 	default:
@@ -50,16 +59,14 @@ func (h *ProductHandler) HandleLaptops(w http.ResponseWriter, r *http.Request) {
 
 func (h *ProductHandler) HandleLaptopByID(w http.ResponseWriter, r *http.Request) {
 	idStr := strings.TrimPrefix(r.URL.Path, "/api/laptops/")
-	id, err := strconv.Atoi(idStr)
-	if err != nil || id <= 0 {
+	if idStr == "" {
 		writeError(w, 400, "bad id")
 		return
 	}
 
 	switch r.Method {
-
 	case http.MethodGet:
-		p, ok := h.store.GetProductByID(id)
+		p, ok := h.store.GetProductByID(idStr)
 		if !ok {
 			writeError(w, 404, "not found")
 			return
@@ -67,7 +74,12 @@ func (h *ProductHandler) HandleLaptopByID(w http.ResponseWriter, r *http.Request
 		writeJSON(w, 200, p)
 
 	case http.MethodPut:
-		var p model.Product
+		role, _ := RoleFromContext(r.Context())
+		if role != "admin" {
+			writeError(w, 403, "forbidden")
+			return
+		}
+		var p model.Laptop
 		if err := json.NewDecoder(r.Body).Decode(&p); err != nil {
 			writeError(w, 400, "bad json")
 			return
@@ -76,7 +88,7 @@ func (h *ProductHandler) HandleLaptopByID(w http.ResponseWriter, r *http.Request
 			writeError(w, 400, err.Error())
 			return
 		}
-		updated, ok := h.store.UpdateProduct(id, p)
+		updated, ok := h.store.UpdateProduct(idStr, p)
 		if !ok {
 			writeError(w, 404, "not found")
 			return
@@ -84,7 +96,12 @@ func (h *ProductHandler) HandleLaptopByID(w http.ResponseWriter, r *http.Request
 		writeJSON(w, 200, updated)
 
 	case http.MethodDelete:
-		if ok := h.store.DeleteProduct(id); !ok {
+		role, _ := RoleFromContext(r.Context())
+		if role != "admin" {
+			writeError(w, 403, "forbidden")
+			return
+		}
+		if ok := h.store.DeleteProduct(idStr); !ok {
 			writeError(w, 404, "not found")
 			return
 		}
@@ -101,9 +118,9 @@ func (h *ProductHandler) HandleCompare(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	firstID, err1 := strconv.Atoi(r.URL.Query().Get("first"))
-	secondID, err2 := strconv.Atoi(r.URL.Query().Get("second"))
-	if err1 != nil || err2 != nil || firstID <= 0 || secondID <= 0 {
+	firstID := r.URL.Query().Get("first")
+	secondID := r.URL.Query().Get("second")
+	if firstID == "" || secondID == "" {
 		writeError(w, 400, "query params first and second required")
 		return
 	}
@@ -127,11 +144,11 @@ func (h *ProductHandler) HandleCompare(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, 200, resp)
 }
 
-func validateProduct(p model.Product) error {
+func validateProduct(p model.Laptop) error {
 	if strings.TrimSpace(p.ModelName) == "" {
 		return httpError("model_name required")
 	}
-	if p.BrandID <= 0 || p.CategoryID <= 0 {
+	if p.BrandID == "" || p.CategoryID == "" {
 		return httpError("brand_id and category_id required")
 	}
 	if p.Price < 0 || p.Stock < 0 {
@@ -143,3 +160,28 @@ func validateProduct(p model.Product) error {
 type httpError string
 
 func (e httpError) Error() string { return string(e) }
+
+func productFilterFromQuery(r *http.Request) store.ProductFilter {
+	q := r.URL.Query()
+
+	priceMin, _ := strconv.ParseFloat(q.Get("price_min"), 64)
+	priceMax, _ := strconv.ParseFloat(q.Get("price_max"), 64)
+
+	includeInactive := false
+	if q.Get("include_inactive") == "true" {
+		includeInactive = true
+	}
+
+	return store.ProductFilter{
+		BrandID:         q.Get("brand"),
+		CategoryID:      q.Get("category"),
+		CPU:             q.Get("cpu"),
+		RAM:             q.Get("ram"),
+		GPU:             q.Get("gpu"),
+		StorageType:     q.Get("storage_type"),
+		PriceMin:        priceMin,
+		PriceMax:        priceMax,
+		Sort:            q.Get("sort"),
+		IncludeInactive: includeInactive,
+	}
+}

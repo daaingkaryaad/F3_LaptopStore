@@ -12,7 +12,7 @@ type ctxKey string
 
 const (
 	CtxUserID ctxKey = "userID"
-	CtxRoleID ctxKey = "roleID"
+	CtxRole   ctxKey = "role"
 )
 
 func AuthRequired(next http.Handler) http.Handler {
@@ -31,15 +31,15 @@ func AuthRequired(next http.Handler) http.Handler {
 		}
 
 		ctx := context.WithValue(r.Context(), CtxUserID, claims.UserID)
-		ctx = context.WithValue(ctx, CtxRoleID, claims.RoleID)
+		ctx = context.WithValue(ctx, CtxRole, claims.Role)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
-func RequireRoleID(roleID int, next http.Handler) http.Handler {
+func AdminOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		rid, ok := RoleIDFromContext(r.Context())
-		if !ok || rid != roleID {
+		role, ok := RoleFromContext(r.Context())
+		if !ok || role != "admin" {
 			writeError(w, 403, "forbidden")
 			return
 		}
@@ -47,14 +47,14 @@ func RequireRoleID(roleID int, next http.Handler) http.Handler {
 	})
 }
 
-func UserIDFromContext(ctx context.Context) (int, bool) {
+func UserIDFromContext(ctx context.Context) (string, bool) {
 	v := ctx.Value(CtxUserID)
-	id, ok := v.(int)
+	id, ok := v.(string)
 	return id, ok
 }
 
-func RoleIDFromContext(ctx context.Context) (int, bool) {
-	v := ctx.Value(CtxRoleID)
-	id, ok := v.(int)
-	return id, ok
+func RoleFromContext(ctx context.Context) (string, bool) {
+	v := ctx.Value(CtxRole)
+	role, ok := v.(string)
+	return role, ok
 }

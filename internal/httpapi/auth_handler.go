@@ -20,6 +20,7 @@ type registerReq struct {
 	Email    string `json:"email"`
 	FullName string `json:"full_name"`
 	Password string `json:"password"`
+	Role     string `json:"role,omitempty"`
 	RoleID   int    `json:"role_id,omitempty"`
 }
 
@@ -40,13 +41,22 @@ func (h *AuthHandlers) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.store.RegisterUser(req.Email, req.FullName, req.Password, req.RoleID)
+	role := req.Role
+	if role == "" {
+		if req.RoleID == 1 {
+			role = "admin"
+		} else {
+			role = "customer"
+		}
+	}
+
+	user, err := h.store.RegisterUser(req.Email, req.FullName, req.Password, role)
 	if err != nil {
 		writeError(w, 400, err.Error())
 		return
 	}
 
-	token, err := auth.GenerateToken(user.ID, user.RoleID)
+	token, err := auth.GenerateToken(user.ID.Hex(), user.Role)
 	if err != nil {
 		writeError(w, 500, "token error")
 		return
@@ -68,7 +78,7 @@ func (h *AuthHandlers) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := auth.GenerateToken(user.ID, user.RoleID)
+	token, err := auth.GenerateToken(user.ID.Hex(), user.Role)
 	if err != nil {
 		writeError(w, 500, "token error")
 		return
