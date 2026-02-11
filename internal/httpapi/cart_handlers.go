@@ -16,8 +16,8 @@ func NewCartHandlers(s *store.Store) *CartHandlers {
 }
 
 type addCartReq struct {
-	LaptopID string `json:"laptop_id"`
-	Quantity int    `json:"quantity"`
+	LaptopID int `json:"laptop_id"`
+	Quantity int `json:"quantity"`
 }
 
 func (h *CartHandlers) AddToCart(w http.ResponseWriter, r *http.Request) {
@@ -49,10 +49,6 @@ func (h *CartHandlers) GetCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cart, err := h.store.GetCart(userID)
-	if err != nil {
-		writeError(w, 500, "failed to fetch cart")
-		return
-	}
+	cart := h.store.GetCart(userID)
 	writeJSON(w, 200, cart)
 }
