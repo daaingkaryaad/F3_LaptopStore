@@ -1,28 +1,54 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"log"
 	"net/http"
+	"time"
 
+	"github.com/daaingkaryaad/F3_LaptopStore/internal/db"
 	"github.com/daaingkaryaad/F3_LaptopStore/internal/httpapi"
 	"github.com/daaingkaryaad/F3_LaptopStore/internal/store"
 )
 
 func main() {
-	st := store.NewStore()
+	client, database, err := db.Connect()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Disconnect(context.TODO())
+
+	st := store.NewStore(database)
+
 	mux := http.NewServeMux()
 
+	authH := httpapi.NewAuthHandlers(st)
+	mux.Handle("/api/auth/register", http.HandlerFunc(authH.Register))
+	mux.Handle("/api/auth/login", http.HandlerFunc(authH.Login))
+
 	prodH := httpapi.NewProductHandler(st)
-	prodH.Register(mux)
+	mux.Handle("/api/laptops/compare", httpapi.AuthRequired(http.HandlerFunc(prodH.HandleCompare)))
+	mux.Handle("/api/laptops/", httpapi.AuthRequired(http.HandlerFunc(prodH.HandleLaptopByID)))
+	mux.Handle("/api/laptops", httpapi.AuthRequired(http.HandlerFunc(prodH.HandleLaptops)))
+
+	reviewH := httpapi.NewReviewHandlers(st)
+	mux.Handle("/api/reviews/", httpapi.AuthRequired(http.HandlerFunc(reviewH.HandleReviewByID)))
+	mux.Handle("/api/reviews", httpapi.AuthRequired(http.HandlerFunc(reviewH.HandleReviews)))
 
 	cartH := httpapi.NewCartHandlers(st)
 	orderH := httpapi.NewOrderHandlers(st)
+	mux.Handle("/api/cart/items", httpapi.AuthRequired(http.HandlerFunc(cartH.AddToCart)))
+	mux.Handle("/api/cart", httpapi.AuthRequired(http.HandlerFunc(cartH.GetCart)))
+	mux.Handle("/api/orders", httpapi.AuthRequired(http.HandlerFunc(orderH.HandleOrders)))
 
-	mux.Handle("/api/cart/items", httpapi.WithUser(http.HandlerFunc(cartH.AddToCart)))
-	mux.Handle("/api/cart", httpapi.WithUser(http.HandlerFunc(cartH.GetCart)))
-	mux.Handle("/api/orders", httpapi.WithUser(http.HandlerFunc(orderH.CreateOrder)))
+	srv := &http.Server{
+		Addr:              ":8080",
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+	}
 
-	fmt.Println("server :8080")
-	http.ListenAndServe(":8080", mux)
-
+	log.Println("server :8080")
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
 }
