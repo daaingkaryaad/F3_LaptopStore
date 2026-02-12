@@ -4,17 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RapidTech Cart Compare</title>
-  <link rel="stylesheet" href="cart.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="cart-header">
-    <a href="index.html" class="back-link">&larr; Back to Store</a>
-    <h1>Cart Product Comparison</h1>
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <a class="brand" href="index.html" aria-label="RapidTech Home">
+          <img src="images/logo.svg" alt="RapidTech logo" class="logo-img" />
+          <span class="brand-name">RapidTech</span>
+        </a>
+      </div>
+
+      <nav class="header-nav" aria-label="Primary">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="laptops.html">All Laptops</a></li>
+          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="cart.html" aria-current="page">Compare</a></li>
+          <li><a class="nav-pill" href="login.html">Login</a></li>
+          <li><a class="nav-pill" href="signup.html">Sign Up</a></li>
+        </ul>
+      </nav>
+
+      <div class="cart">
+        <a href="cart.html" class="cart-link" aria-label="Compare">
+          <img src="images/header.png" alt="Compare" class="cart-icon" />
+        </a>
+      </div>
+    </div>
   </header>
 
   <main class="cart-main">
+    <section class="page-head">
+      <div>
+        <h1 class="page-title">Cart Product Comparison</h1>
+        <p class="page-subtitle">Pick the best value based on price and specs.</p>
+      </div>
+      <a class="btn" href="index.html">← Back to Store</a>
+    </section>
+
     <section class="compare-summary">
-      <p>Click "Compare" and the system will pick the best value based on price and specs.</p>
+      <p class="muted">Click <strong>Compare</strong> and the system will pick the best value based on price and specs.</p>
       <button id="compareBtn" type="button">Compare</button>
       <div id="winnerBox" class="winner-box" aria-live="polite">No comparison yet</div>
     </section>

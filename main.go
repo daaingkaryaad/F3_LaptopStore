@@ -23,13 +23,14 @@ func main() {
 	mux := http.NewServeMux()
 
 	authH := httpapi.NewAuthHandlers(st)
+	mux.Handle("/api/auth/admin/register", http.HandlerFunc(authH.AdminRegister))
 	mux.Handle("/api/auth/register", http.HandlerFunc(authH.Register))
 	mux.Handle("/api/auth/login", http.HandlerFunc(authH.Login))
 
 	prodH := httpapi.NewProductHandler(st)
-	mux.Handle("/api/laptops/compare", httpapi.AuthRequired(http.HandlerFunc(prodH.HandleCompare)))
-	mux.Handle("/api/laptops/", httpapi.AuthRequired(http.HandlerFunc(prodH.HandleLaptopByID)))
-	mux.Handle("/api/laptops", httpapi.AuthRequired(http.HandlerFunc(prodH.HandleLaptops)))
+	mux.Handle("/api/laptops/compare", http.HandlerFunc(prodH.HandleCompare))
+	mux.Handle("/api/laptops/", http.HandlerFunc(prodH.HandleLaptopByID))
+	mux.Handle("/api/laptops", http.HandlerFunc(prodH.HandleLaptops))
 
 	reviewH := httpapi.NewReviewHandlers(st)
 	mux.Handle("/api/reviews/", httpapi.AuthRequired(http.HandlerFunc(reviewH.HandleReviewByID)))
@@ -40,6 +41,9 @@ func main() {
 	mux.Handle("/api/cart/items", httpapi.AuthRequired(http.HandlerFunc(cartH.AddToCart)))
 	mux.Handle("/api/cart", httpapi.AuthRequired(http.HandlerFunc(cartH.GetCart)))
 	mux.Handle("/api/orders", httpapi.AuthRequired(http.HandlerFunc(orderH.HandleOrders)))
+
+	fs := http.FileServer(http.Dir("frontend"))
+	mux.Handle("/", fs)
 
 	srv := &http.Server{
 		Addr:              ":8080",

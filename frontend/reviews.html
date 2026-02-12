@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reviews</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <a class="brand" href="index.html" aria-label="RapidTech Home">
+          <img src="images/logo.svg" alt="RapidTech logo" class="logo-img" />
+          <span class="brand-name">RapidTech</span>
+        </a>
+      </div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="laptops.html">All Laptops</a></li>
+          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="cart.html">Compare</a></li>
+          <li><a class="nav-pill" href="login.html">Login</a></li>
+          <li><a class="nav-pill" href="signup.html">Sign Up</a></li>
+        </ul>
+      </nav>
+      <div class="cart">
+        <a href="cart.html" class="cart-link" aria-label="Cart">
+          <img src="images/header.png" alt="Compare" class="cart-icon">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="reviews-main">
+    <section class="reviews-hero">
+      <h1>Customer Reviews</h1>
+      <p>Read real feedback and share your own experience.</p>
+    </section>
+
+    <section class="reviews-layout">
+      <div class="review-form-card">
+        <h2>Write a review</h2>
+
+        <label class="field">
+          <span>JWT Token (required)</span>
+          <input id="tokenInput" type="text" placeholder="Paste your JWT token" />
+        </label>
+
+        <label class="field">
+          <span>Choose laptop</span>
+          <select id="laptopSelect"></select>
+        </label>
+
+        <label class="field">
+          <span>Rating</span>
+          <select id="ratingSelect">
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Very good</option>
+            <option value="3">3 - Good</option>
+            <option value="2">2 - Fair</option>
+            <option value="1">1 - Poor</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Comment</span>
+          <textarea id="commentInput" rows="4" placeholder="Share your experience"></textarea>
+        </label>
+
+        <button id="submitReview">Submit Review</button>
+        <p id="formMsg" class="form-msg"></p>
+      </div>
+
+      <div class="review-list-card">
+        <div class="review-list-head">
+          <h2>Reviews</h2>
+          <select id="filterLaptop"></select>
+        </div>
+
+        <div id="reviewList" class="review-list">
+          <p class="empty">Select a laptop to view reviews.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="reviews.js"></script>
+</body>
+</html>

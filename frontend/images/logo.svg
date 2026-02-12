@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="170" height="32" viewBox="0 0 170 32" fill="none" role="img" aria-label="RapidTech logo">
+  <defs>
+    <linearGradient id="rtGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00E5FF"/>
+      <stop offset="1" stop-color="#7C4DFF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circuit badge -->
+  <rect x="1" y="1" width="30" height="30" rx="8" stroke="url(#rtGrad)" stroke-width="2"/>
+  <circle cx="10" cy="10" r="2.2" fill="url(#rtGrad)"/>
+  <circle cx="22" cy="10" r="2.2" fill="url(#rtGrad)"/>
+  <circle cx="10" cy="22" r="2.2" fill="url(#rtGrad)"/>
+  <path d="M10 10H22M10 10V22M10 22H22" stroke="url(#rtGrad)" stroke-width="2" stroke-linecap="round"/>
+  <rect x="14" y="14" width="6" height="6" rx="2" fill="url(#rtGrad)"/>
+
+  <!-- Text -->
+  <text x="40" y="22" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" font-weight="700">
+    RapidTech
+  </text>
+</svg>

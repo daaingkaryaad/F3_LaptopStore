@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Laptops</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <a class="brand" href="index.html" aria-label="RapidTech Home">
+          <img src="images/logo.svg" alt="RapidTech logo" class="logo-img" />
+          <span class="brand-name">RapidTech</span>
+        </a>
+      </div>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="laptops.html">All Laptops</a></li>
+          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="cart.html">Compare</a></li>
+          <li><a class="nav-pill" href="login.html">Login</a></li>
+          <li><a class="nav-pill" href="signup.html">Sign Up</a></li>
+        </ul>
+      </nav>
+      <div class="cart">
+        <a href="cart.html" class="cart-link" aria-label="Compare">
+          <img src="images/header.png" alt="Compare" class="cart-icon">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="laptops-main">
+    <h1 class="page-title">All Laptops</h1>
+    <p class="page-subtitle">Live data from our inventory</p>
+
+    <section id="laptopGrid" class="laptop-grid"></section>
+  </main>
+
+  <script src="laptops.js"></script>
+</body>
+</html>

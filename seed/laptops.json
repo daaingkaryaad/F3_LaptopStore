@@ -1,0 +1,182 @@
+[
+  {
+    "model_name": "Apple MacBook Air M3 13",
+    "brand_id": "apple",
+    "category_id": "ultrabook",
+    "price": 679000,
+    "stock": 6,
+    "description": "Lightweight productivity with M3 performance.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Apple M3 8-core",
+      "ram": "16GB",
+      "storage": "512GB",
+      "storage_type": "SSD",
+      "gpu": "Apple GPU 10-core",
+      "screen_size": "13.6\"",
+      "screen_resolution": "2560x1664"
+    }
+  },
+  {
+    "model_name": "Dell XPS 13 Plus 9320",
+    "brand_id": "dell",
+    "category_id": "ultrabook",
+    "price": 729000,
+    "stock": 5,
+    "description": "Premium thin-and-light with OLED options.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i7-1360P",
+      "ram": "16GB",
+      "storage": "1TB",
+      "storage_type": "SSD",
+      "gpu": "Intel Iris Xe",
+      "screen_size": "13.4\"",
+      "screen_resolution": "3456x2160"
+    }
+  },
+  {
+    "model_name": "ASUS ROG Zephyrus G14",
+    "brand_id": "asus",
+    "category_id": "gaming",
+    "price": 899000,
+    "stock": 4,
+    "description": "Portable gaming with RTX graphics.",
+    "is_active": true,
+    "specs": {
+      "cpu": "AMD Ryzen 9 7940HS",
+      "ram": "32GB",
+      "storage": "1TB",
+      "storage_type": "SSD",
+      "gpu": "NVIDIA RTX 4070",
+      "screen_size": "14\"",
+      "screen_resolution": "2560x1600"
+    }
+  },
+  {
+    "model_name": "Lenovo ThinkPad X1 Carbon Gen 11",
+    "brand_id": "lenovo",
+    "category_id": "business",
+    "price": 789000,
+    "stock": 3,
+    "description": "Business-class durability and security.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i7-1355U",
+      "ram": "16GB",
+      "storage": "512GB",
+      "storage_type": "SSD",
+      "gpu": "Intel Iris Xe",
+      "screen_size": "14\"",
+      "screen_resolution": "1920x1200"
+    }
+  },
+  {
+    "model_name": "HP Spectre x360 14",
+    "brand_id": "hp",
+    "category_id": "2-in-1",
+    "price": 719000,
+    "stock": 4,
+    "description": "Premium convertible with OLED display.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i7-1355U",
+      "ram": "16GB",
+      "storage": "1TB",
+      "storage_type": "SSD",
+      "gpu": "Intel Iris Xe",
+      "screen_size": "13.5\"",
+      "screen_resolution": "3000x2000"
+    }
+  },
+  {
+    "model_name": "Acer Swift 3 14",
+    "brand_id": "acer",
+    "category_id": "everyday",
+    "price": 379000,
+    "stock": 8,
+    "description": "Affordable daily driver.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i5-1240P",
+      "ram": "16GB",
+      "storage": "512GB",
+      "storage_type": "SSD",
+      "gpu": "Intel Iris Xe",
+      "screen_size": "14\"",
+      "screen_resolution": "1920x1080"
+    }
+  },
+  {
+    "model_name": "MSI Creator Z16",
+    "brand_id": "msi",
+    "category_id": "creator",
+    "price": 949000,
+    "stock": 2,
+    "description": "Creator laptop with high color accuracy.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i9-12900H",
+      "ram": "32GB",
+      "storage": "1TB",
+      "storage_type": "SSD",
+      "gpu": "NVIDIA RTX 3060",
+      "screen_size": "16\"",
+      "screen_resolution": "2560x1600"
+    }
+  },
+  {
+    "model_name": "Samsung Galaxy Book3 Pro",
+    "brand_id": "samsung",
+    "category_id": "ultrabook",
+    "price": 699000,
+    "stock": 0,
+    "description": "Ultra-thin OLED productivity laptop.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i7-1360P",
+      "ram": "16GB",
+      "storage": "512GB",
+      "storage_type": "SSD",
+      "gpu": "Intel Iris Xe",
+      "screen_size": "14\"",
+      "screen_resolution": "2880x1800"
+    }
+  },
+  {
+    "model_name": "LG Gram 16",
+    "brand_id": "lg",
+    "category_id": "ultrabook",
+    "price": 669000,
+    "stock": 0,
+    "description": "Extremely light 16-inch productivity.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i7-1360P",
+      "ram": "16GB",
+      "storage": "1TB",
+      "storage_type": "SSD",
+      "gpu": "Intel Iris Xe",
+      "screen_size": "16\"",
+      "screen_resolution": "2560x1600"
+    }
+  },
+  {
+    "model_name": "Microsoft Surface Laptop 5",
+    "brand_id": "microsoft",
+    "category_id": "everyday",
+    "price": 599000,
+    "stock": 7,
+    "description": "Clean design with great keyboard.",
+    "is_active": true,
+    "specs": {
+      "cpu": "Intel Core i5-1235U",
+      "ram": "16GB",
+      "storage": "512GB",
+      "storage_type": "SSD",
+      "gpu": "Intel Iris Xe",
+      "screen_size": "13.5\"",
+      "screen_resolution": "2256x1504"
+    }
+  }
+]

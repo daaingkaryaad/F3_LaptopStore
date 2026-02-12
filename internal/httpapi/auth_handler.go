@@ -3,6 +3,7 @@ package httpapi
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/daaingkaryaad/F3_LaptopStore/internal/auth"
 	"github.com/daaingkaryaad/F3_LaptopStore/internal/store"
@@ -22,6 +23,7 @@ type registerReq struct {
 	Password string `json:"password"`
 	Role     string `json:"role,omitempty"`
 	RoleID   int    `json:"role_id,omitempty"`
+	Secret   string `json:"secret,omitempty"`
 }
 
 type loginReq struct {
@@ -41,16 +43,36 @@ func (h *AuthHandlers) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	role := req.Role
-	if role == "" {
-		if req.RoleID == 1 {
-			role = "admin"
-		} else {
-			role = "customer"
-		}
+	role := "customer"
+	user, err := h.store.RegisterUser(req.Email, req.FullName, req.Password, role)
+	if err != nil {
+		writeError(w, 400, err.Error())
+		return
 	}
 
-	user, err := h.store.RegisterUser(req.Email, req.FullName, req.Password, role)
+	token, err := auth.GenerateToken(user.ID.Hex(), user.Role)
+	if err != nil {
+		writeError(w, 500, "token error")
+		return
+	}
+
+	writeJSON(w, 201, authResp{Token: token, User: user})
+}
+
+func (h *AuthHandlers) AdminRegister(w http.ResponseWriter, r *http.Request) {
+	var req registerReq
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, 400, "bad json")
+		return
+	}
+
+	secret := os.Getenv("ADMIN_SECRET")
+	if secret == "" || req.Secret != secret {
+		writeError(w, 403, "invalid admin secret")
+		return
+	}
+
+	user, err := h.store.RegisterUser(req.Email, req.FullName, req.Password, "admin")
 	if err != nil {
 		writeError(w, 400, err.Error())
 		return

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <a class="brand" href="index.html" aria-label="RapidTech Home">
+          <img src="images/logo.svg" alt="RapidTech logo" class="logo-img" />
+          <span class="brand-name">RapidTech</span>
+        </a>
+      </div>
+
+      <nav class="header-nav" aria-label="Primary">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="laptops.html">All Laptops</a></li>
+          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="cart.html">Compare</a></li>
+          <li><a class="nav-pill" href="login.html" aria-current="page">Login</a></li>
+          <li><a class="nav-pill" href="signup.html">Sign Up</a></li>
+        </ul>
+      </nav>
+
+      <div class="cart">
+        <a href="cart.html" class="cart-link" aria-label="Compare">
+          <img src="images/header.png" alt="Compare" class="cart-icon" />
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="auth-card" aria-label="Login form">
+      <h1>Login</h1>
+      <p class="muted">No backend yet. This is the pretty part.</p>
+
+      <form class="auth-form" action="#" method="post">
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input type="password" name="password" placeholder="••••••••" required />
+        </label>
+
+        <button class="btn btn-primary" type="submit">Login</button>
+      </form>
+
+      <p class="muted small">Don’t have an account? <a href="signup.html">Create one</a>.</p>
+    </section>
+  </main>
+</body>
+</html>
