@@ -1,10 +1,15 @@
 package httpapi
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/daaingkaryaad/F3_LaptopStore/internal/store"
 )
+
+type createOrderReq struct {
+	ItemIDs []string `json:"item_ids"`
+}
 
 type OrderHandlers struct {
 	store *store.Store
@@ -32,7 +37,10 @@ func (h *OrderHandlers) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	order, err := h.store.CreateOrderFromCart(userID)
+	var req createOrderReq
+	_ = json.NewDecoder(r.Body).Decode(&req)
+
+	order, err := h.store.CreateOrderFromCart(userID, req.ItemIDs)
 	if err != nil {
 		writeError(w, 400, err.Error())
 		return

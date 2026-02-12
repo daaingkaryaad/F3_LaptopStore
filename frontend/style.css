@@ -198,6 +198,19 @@ main {
   gap: 18px;
 }
 
+/* Brand logos should be a compact grid (1-2 lines on desktop) */
+.brand-logos {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  align-items: center;
+}
+
+.brand-logo {
+  width: 100%;
+  max-height: 46px;
+  object-fit: contain;
+  filter: saturate(1.05);
+}
+
 .category-card,
 .type-card {
   background: rgba(21, 31, 51, 0.78);
@@ -348,6 +361,35 @@ footer {
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
+}
+
+/* The laptops page uses simple <li><span>Label</span><span>Value</span></li> */
+.spec-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(10, 16, 28, 0.35);
+  border: 1px solid rgba(40, 53, 83, 0.6);
+}
+
+.spec-list li span:first-child {
+  color: var(--muted2);
+  font-weight: 800;
+}
+
+.spec-list li span:last-child {
+  color: var(--text);
+  font-weight: 900;
+  text-align: right;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
 .spec-row {
@@ -586,4 +628,56 @@ footer {
   .header-container { padding: 12px 12px; }
   .header-nav a { padding: 10px 10px; }
   .cart-link { width: 40px; height: 40px; }
+}
+
+
+/* ======= Compare / Cart additions ======= */
+.compare-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.check{display:flex;align-items:center;gap:8px}
+.card-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.qty{font-size:12px;opacity:.85}
+
+/* ======= Orders ======= */
+.panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px;margin:16px 0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.panel-title{margin:0 0 10px 0}
+.order-items{display:flex;flex-direction:column;gap:10px}
+.order-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
+.order-name{font-weight:700}
+.order-price{font-weight:800}
+.order-total{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.orders-list{display:flex;flex-direction:column;gap:12px}
+.order-card{padding:14px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
+.order-card-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.order-lines{margin-top:8px}
+
+/* ======= Admin ======= */
+.admin-table{display:flex;flex-direction:column;gap:12px}
+.admin-row{padding:14px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
+.admin-main{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.admin-id{font-size:12px;opacity:.75}
+.admin-fields{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.admin-fields label{display:flex;gap:8px;align-items:center;font-size:12px;opacity:.95}
+.admin-fields input{width:140px}
+.admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.admin-details{margin-top:8px}
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+.spec-grid label{display:flex;flex-direction:column;gap:6px;font-size:12px;opacity:.95}
+.grid-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;align-items:end}
+.grid-form button{height:44px}
+
+/* ======= Admin reviews ======= */
+.reviews-admin-list{display:flex;flex-direction:column;gap:12px}
+.review-admin-card{padding:14px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
+.review-admin-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.review-admin-actions{display:flex;gap:10px}
+.review-admin-body{margin-top:10px;line-height:1.45}
+.small{font-size:12px;opacity:.8}
+
+/* ======= Brand logos compact ======= */
+.brand-logos{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;max-width:1000px;margin:0 auto}
+.brand-logo{height:42px;width:auto;object-fit:contain;filter:grayscale(.1);opacity:.95}
+@media (max-width: 700px){
+  .brand-logo{height:34px}
+  .admin-fields input{width:120px}
 }

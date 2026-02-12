@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RapidTech Orders</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <a class="brand" href="index.html" aria-label="RapidTech Home">
+        <img src="images/logo.svg" alt="RapidTech logo" class="logo-img" />
+        <span class="brand-name">RapidTech</span>
+      </a>
+    </div>
+    <nav class="header-nav" aria-label="Primary">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="laptops.html">All Laptops</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="cart.html">Compare</a></li>
+        <li><a class="nav-pill" href="login.html">Login</a></li>
+        <li><a class="nav-pill" href="signup.html">Sign Up</a></li>
+      </ul>
+    </nav>
+    <div class="cart">
+      <a href="cart.html" class="cart-link" aria-label="Compare">
+        <img src="images/header.png" alt="Compare" class="cart-icon" />
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="cart-main">
+  <section class="page-head">
+    <div>
+      <h1 class="page-title">Checkout</h1>
+      <p class="page-subtitle">Fake payment, real endpoints. Teachers love that.</p>
+    </div>
+    <a class="btn" href="cart.html">← Back to Compare</a>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Selected items</h2>
+    <div id="selectedItems" class="order-items"></div>
+    <div class="order-total">
+      <span>Total</span>
+      <strong id="orderTotal">₸0</strong>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Payment details (demo)</h2>
+    <form id="payForm" class="auth-form">
+      <div class="form-row">
+        <label>Card holder</label>
+        <input name="name" placeholder="John RapidTech" required />
+      </div>
+      <div class="form-row">
+        <label>Card number</label>
+        <input name="card" placeholder="4242 4242 4242 4242" required />
+      </div>
+      <div class="form-split">
+        <div class="form-row">
+          <label>Expiry</label>
+          <input name="exp" placeholder="12/29" required />
+        </div>
+        <div class="form-row">
+          <label>CVV</label>
+          <input name="cvv" placeholder="123" required />
+        </div>
+      </div>
+      <button class="btn primary" type="submit">Place order</button>
+      <div id="payMsg" class="muted"></div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Your orders</h2>
+    <div id="ordersList" class="orders-list"></div>
+  </section>
+</main>
+
+<script src="scripts.js"></script>
+<script src="orders.js"></script>
+</body>
+</html>

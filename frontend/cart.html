@@ -46,91 +46,24 @@
 
     <section class="compare-summary">
       <p class="muted">Click <strong>Compare</strong> and the system will pick the best value based on price and specs.</p>
-      <button id="compareBtn" type="button">Compare</button>
+      <div class="compare-actions">
+        <button id="compareBtn" type="button">Compare</button>
+        <button id="checkoutBtn" type="button" class="btn">Checkout Selected</button>
+      </div>
       <div id="winnerBox" class="winner-box" aria-live="polite">No comparison yet</div>
+      <div style="margin-top:16px">
+        <button id="checkoutBtn" class="btn-primary">
+          Checkout Selected
+        </button>
+      </div>
+
     </section>
 
-    <section class="products" id="products">
-      <article class="product-card" data-name="Acer Swift 14" data-price="449000" data-cpu="74" data-ram="16" data-ssd="512" data-battery="11" data-display="8.5">
-        <h2>Acer Swift 14</h2>
-        <ul>
-          <li>Price: ₸449,000</li>
-          <li>CPU score: 74</li>
-          <li>RAM: 16 GB</li>
-          <li>SSD: 512 GB</li>
-          <li>Battery: 11 h</li>
-          <li>Display score: 8.5/10</li>
-        </ul>
-        <p class="score">Value score: <span>-</span></p>
-      </article>
-
-      <article class="product-card" data-name="Lenovo IdeaPad 5" data-price="369000" data-cpu="68" data-ram="16" data-ssd="512" data-battery="10" data-display="7.8">
-        <h2>Lenovo IdeaPad 5</h2>
-        <ul>
-          <li>Price: ₸369,000</li>
-          <li>CPU score: 68</li>
-          <li>RAM: 16 GB</li>
-          <li>SSD: 512 GB</li>
-          <li>Battery: 10 h</li>
-          <li>Display score: 7.8/10</li>
-        </ul>
-        <p class="score">Value score: <span>-</span></p>
-      </article>
-
-      <article class="product-card" data-name="ASUS VivoBook Pro" data-price="559000" data-cpu="88" data-ram="24" data-ssd="1024" data-battery="9" data-display="9.1">
-        <h2>ASUS VivoBook Pro</h2>
-        <ul>
-          <li>Price: ₸559,000</li>
-          <li>CPU score: 88</li>
-          <li>RAM: 24 GB</li>
-          <li>SSD: 1 TB</li>
-          <li>Battery: 9 h</li>
-          <li>Display score: 9.1/10</li>
-        </ul>
-        <p class="score">Value score: <span>-</span></p>
-      </article>
-    </section>
+    <section class="products" id="products"></section>
   </main>
 
-  <script>
-    const compareBtn = document.getElementById('compareBtn');
-    const winnerBox = document.getElementById('winnerBox');
-    const cards = Array.from(document.querySelectorAll('.product-card'));
-
-    function calculateValue(card) {
-      const price = Number(card.dataset.price);
-      const cpu = Number(card.dataset.cpu);
-      const ram = Number(card.dataset.ram);
-      const ssd = Number(card.dataset.ssd);
-      const battery = Number(card.dataset.battery);
-      const display = Number(card.dataset.display);
-
-      // Weighted utility: higher is better
-      const utility = cpu * 0.45 + ram * 2 + (ssd / 128) * 2.5 + battery * 1.6 + display * 4;
-      return (utility / (price / 1000)) * 10;
-    }
-
-    compareBtn.addEventListener('click', () => {
-      let bestCard = null;
-      let bestScore = -Infinity;
-
-      cards.forEach((card) => {
-        card.classList.remove('winner');
-        const score = calculateValue(card);
-        card.querySelector('.score span').textContent = score.toFixed(2);
-
-        if (score > bestScore) {
-          bestScore = score;
-          bestCard = card;
-        }
-      });
-
-      if (bestCard) {
-        bestCard.classList.add('winner');
-        winnerBox.textContent = `Best value: ${bestCard.dataset.name} (value score ${bestScore.toFixed(2)})`;
-      }
-    });
-  </script>
+  <script src="scripts.js"></script>
+  <script src="cart.js"></script>
 </body>
 </html>
 

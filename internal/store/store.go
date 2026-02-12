@@ -20,6 +20,7 @@ type Store struct {
 	carts    *mongo.Collection
 	orders   *mongo.Collection
 	reviews  *mongo.Collection
+	sessions *mongo.Collection
 }
 
 func NewStore(db *mongo.Database) *Store {
@@ -30,6 +31,7 @@ func NewStore(db *mongo.Database) *Store {
 		carts:    db.Collection("carts"),
 		orders:   db.Collection("orders"),
 		reviews:  db.Collection("reviews"),
+		sessions: db.Collection("sessions"),
 	}
 }
 
@@ -55,7 +57,7 @@ func (s *Store) RegisterUser(email, fullName, password, role string) (model.User
 		return model.User{}, fmt.Errorf("email and password required")
 	}
 	if role == "" {
-		role = "customer"
+		role = "user"
 	}
 
 	ctx, cancel := s.ctx()
@@ -311,7 +313,7 @@ func (s *Store) GetCart(userID string) (model.Cart, error) {
 	return cart, nil
 }
 
-func (s *Store) CreateOrderFromCart(userID string) (model.Order, error) {
+func (s *Store) CreateOrderFromCart(userID string, itemIDs []string) (model.Order, error) {
 	ctx, cancel := s.ctx()
 	defer cancel()
 
@@ -323,10 +325,28 @@ func (s *Store) CreateOrderFromCart(userID string) (model.Order, error) {
 		return model.Order{}, fmt.Errorf("cart empty")
 	}
 
+	selected := cart.Items
+	if len(itemIDs) > 0 {
+		set := map[string]struct{}{}
+		for _, id := range itemIDs {
+			set[id] = struct{}{}
+		}
+		filtered := make([]model.CartItem, 0, len(cart.Items))
+		for _, it := range cart.Items {
+			if _, ok := set[it.LaptopID]; ok {
+				filtered = append(filtered, it)
+			}
+		}
+		if len(filtered) == 0 {
+			return model.Order{}, fmt.Errorf("no selected items")
+		}
+		selected = filtered
+	}
+
 	var items []model.OrderItem
 	var total float64
 
-	for _, it := range cart.Items {
+	for _, it := range selected {
 		p, ok := s.GetProductByID(it.LaptopID)
 		if !ok || !p.IsActive {
 			return model.Order{}, fmt.Errorf("laptop not found")
@@ -342,7 +362,7 @@ func (s *Store) CreateOrderFromCart(userID string) (model.Order, error) {
 		total += p.Price * float64(it.Quantity)
 	}
 
-	for _, it := range cart.Items {
+	for _, it := range selected {
 		oid, err := primitive.ObjectIDFromHex(it.LaptopID)
 		if err != nil {
 			return model.Order{}, fmt.Errorf("invalid laptop id")
@@ -369,7 +389,23 @@ func (s *Store) CreateOrderFromCart(userID string) (model.Order, error) {
 		return model.Order{}, err
 	}
 
-	_, _ = s.carts.DeleteOne(ctx, bson.M{"user_id": userID})
+	if len(itemIDs) == 0 {
+		_, _ = s.carts.DeleteOne(ctx, bson.M{"user_id": userID})
+	} else {
+		remaining := []model.CartItem{}
+		set := map[string]bool{}
+		for _, id := range itemIDs {
+			set[id] = true
+		}
+		for _, it := range cart.Items {
+			if !set[it.LaptopID] {
+				remaining = append(remaining, it)
+			}
+		}
+		cart.Items = remaining
+		cart.UpdatedAt = time.Now()
+		_, _ = s.carts.ReplaceOne(ctx, bson.M{"user_id": userID}, cart, options.Replace().SetUpsert(true))
+	}
 
 	return order, nil
 }
@@ -441,7 +477,7 @@ func (s *Store) ListReviews(laptopID string, includePending bool) ([]model.Revie
 	return out, nil
 }
 
-func (s *Store) ApproveReview(id string) (model.Review, bool) {
+func (s *Store) SetReviewStatus(id string, status string) (model.Review, bool) {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return model.Review{}, false
@@ -450,7 +486,11 @@ func (s *Store) ApproveReview(id string) (model.Review, bool) {
 	ctx, cancel := s.ctx()
 	defer cancel()
 
-	update := bson.M{"$set": bson.M{"status": "approved"}}
+	if status == "" {
+		status = "approved"
+	}
+
+	update := bson.M{"$set": bson.M{"status": status}}
 	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
 
 	var out model.Review
@@ -458,4 +498,68 @@ func (s *Store) ApproveReview(id string) (model.Review, bool) {
 		return model.Review{}, false
 	}
 	return out, true
+}
+
+func (s *Store) ApproveReview(id string) (model.Review, bool) {
+	return s.SetReviewStatus(id, "approved")
+}
+
+func (s *Store) EnsureAdminUser(email, fullName, password string) error {
+	if email == "" {
+		email = "admin@rapidtech.local"
+	}
+	if fullName == "" {
+		fullName = "Admin"
+	}
+	if password == "" {
+		password = "Admin123!"
+	}
+
+	ctx, cancel := s.ctx()
+	defer cancel()
+
+	count, err := s.users.CountDocuments(ctx, bson.M{"role": "admin"})
+	if err != nil {
+		return err
+	}
+	if count > 0 {
+		return nil
+	}
+
+	_, err = s.RegisterUser(email, fullName, password, "admin")
+	return err
+}
+
+func (s *Store) CreateSession(token, userID, role string, expiresAt time.Time) error {
+	ctx, cancel := s.ctx()
+	defer cancel()
+
+	_, err := s.sessions.InsertOne(ctx, model.Session{
+		ID:        primitive.NewObjectID(),
+		Token:     token,
+		UserID:    userID,
+		Role:      role,
+		ExpiresAt: expiresAt,
+		CreatedAt: time.Now(),
+	})
+	return err
+}
+
+func (s *Store) IsSessionValid(token string) (bool, error) {
+	ctx, cancel := s.ctx()
+	defer cancel()
+
+	var sess model.Session
+	err := s.sessions.FindOne(ctx, bson.M{"token": token}).Decode(&sess)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return false, nil
+		}
+		return false, err
+	}
+	if time.Now().After(sess.ExpiresAt) {
+		_, _ = s.sessions.DeleteOne(ctx, bson.M{"token": token})
+		return false, nil
+	}
+	return true, nil
 }

@@ -16,6 +16,11 @@ func NewReviewHandlers(s *store.Store) *ReviewHandlers {
 	return &ReviewHandlers{store: s}
 }
 
+type moderateReviewReq struct {
+	Status string `json:"status"`
+	Approved *bool `json:"approved,omitempty"`
+}
+
 type createReviewReq struct {
 	LaptopID string `json:"laptop_id"`
 	Rating   int    `json:"rating"`
@@ -99,7 +104,16 @@ func (h *ReviewHandlers) ApproveReview(w http.ResponseWriter, r *http.Request, i
 		return
 	}
 
-	updated, ok := h.store.ApproveReview(id)
+	var req moderateReviewReq
+	_ = json.NewDecoder(r.Body).Decode(&req)
+	status := "approved"
+	if req.Status != "" {
+		status = req.Status
+	} else if req.Approved != nil && !*req.Approved {
+		status = "rejected"
+	}
+
+	updated, ok := h.store.SetReviewStatus(id, status)
 	if !ok {
 		writeError(w, 404, "not found")
 		return

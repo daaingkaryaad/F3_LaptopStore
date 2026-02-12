@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin • Products</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <a class="brand" href="index.html" aria-label="RapidTech Home">
+        <img src="images/logo.svg" alt="RapidTech logo" class="logo-img" />
+        <span class="brand-name">RapidTech</span>
+      </a>
+    </div>
+    <nav class="header-nav" aria-label="Primary">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="laptops.html">All Laptops</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="cart.html">Compare</a></li>
+        <li><a class="nav-pill" href="login.html">Login</a></li>
+        <li><a class="nav-pill" href="signup.html">Sign Up</a></li>
+      </ul>
+    </nav>
+    <div class="cart">
+      <a href="cart.html" class="cart-link" aria-label="Compare">
+        <img src="images/header.png" alt="Compare" class="cart-icon" />
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="cart-main">
+  <section class="page-head">
+    <div>
+      <h1 class="page-title">Admin: Product Management</h1>
+      <p class="page-subtitle">Edit price, stock, specs. CRUD in the UI. Humans love buttons.</p>
+    </div>
+    <a class="btn" href="index.html">← Back</a>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Create laptop</h2>
+    <form id="createForm" class="grid-form">
+      <input name="model_name" placeholder="Model name" required />
+      <input name="brand_id" placeholder="Brand (e.g., Lenovo)" required />
+      <input name="category_id" placeholder="Category (e.g., ultrabook)" required />
+      <input name="price" type="number" step="1" placeholder="Price" required />
+      <input name="stock" type="number" step="1" placeholder="Stock" required />
+      <input name="cpu" placeholder="CPU" />
+      <input name="ram" placeholder="RAM (e.g., 16 GB)" />
+      <input name="gpu" placeholder="GPU" />
+      <input name="storage" placeholder="Storage (e.g., 512GB)" />
+      <input name="storage_type" placeholder="Storage type (SSD/HDD)" />
+      <input name="screen_size" placeholder="Screen size (e.g., 14)" />
+      <input name="screen_resolution" placeholder="Resolution (e.g., 1920x1080)" />
+      <button class="btn primary" type="submit">Create</button>
+      <div id="createMsg" class="muted"></div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2 class="panel-title">All laptops</h2>
+      <button id="reloadBtn" class="btn" type="button">Reload</button>
+    </div>
+    <div id="adminMsg" class="muted"></div>
+    <div id="productsTable" class="admin-table"></div>
+  </section>
+</main>
+
+<script src="scripts.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

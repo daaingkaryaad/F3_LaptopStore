@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin • Review Moderation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <a class="brand" href="index.html" aria-label="RapidTech Home">
+        <img src="images/logo.svg" alt="RapidTech logo" class="logo-img" />
+        <span class="brand-name">RapidTech</span>
+      </a>
+    </div>
+    <nav class="header-nav" aria-label="Primary">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="laptops.html">All Laptops</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="cart.html">Compare</a></li>
+        <li><a class="nav-pill" href="login.html">Login</a></li>
+        <li><a class="nav-pill" href="signup.html">Sign Up</a></li>
+      </ul>
+    </nav>
+    <div class="cart">
+      <a href="cart.html" class="cart-link" aria-label="Compare">
+        <img src="images/header.png" alt="Compare" class="cart-icon" />
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="cart-main">
+  <section class="page-head">
+    <div>
+      <h1 class="page-title">Admin: Review Moderation</h1>
+      <p class="page-subtitle">Approve or reject reviews before they show up publicly.</p>
+    </div>
+    <a class="btn" href="admin.html">← Products</a>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2 class="panel-title">Pending reviews</h2>
+      <button id="reloadReviews" class="btn" type="button">Reload</button>
+    </div>
+    <div id="reviewsMsg" class="muted"></div>
+    <div id="pendingReviews" class="reviews-admin-list"></div>
+  </section>
+</main>
+
+<script src="scripts.js"></script>
+<script src="admin_reviews.js"></script>
+</body>
+</html>

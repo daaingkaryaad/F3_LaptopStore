@@ -39,9 +39,9 @@
   <main class="page">
     <section class="auth-card" aria-label="Sign up form">
       <h1>Create account</h1>
-      <p class="muted">Backend later. Right now, we’re just making it not ugly.</p>
+      <p class="muted">Create an account to add laptops to your cart and compare them.</p>
 
-      <form class="auth-form" action="#" method="post">
+      <form id="signupForm" class="auth-form" action="#" method="post" novalidate>
         <label class="field">
           <span>Full name</span>
           <input type="text" name="name" placeholder="Your Name" required />
@@ -58,10 +58,36 @@
         </label>
 
         <button class="btn btn-primary" type="submit">Sign Up</button>
+        <div id="signupMsg" class="muted small" aria-live="polite"></div>
       </form>
 
       <p class="muted small">Already have an account? <a href="login.html">Login</a>.</p>
     </section>
   </main>
+
+  <script src="scripts.js"></script>
+  <script>
+    const form = document.getElementById('signupForm');
+    const msg = document.getElementById('signupMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+      const full_name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const password = form.password.value;
+
+      try {
+        const payload = await window.RapidTech.apiFetch('/api/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({ email, full_name, password }),
+        });
+        window.RapidTech.setToken(payload.token);
+        window.location.href = 'laptops.html';
+      } catch (err) {
+        msg.textContent = err.message || 'Sign up failed';
+      }
+    });
+  </script>
 </body>
 </html>
