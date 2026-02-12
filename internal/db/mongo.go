@@ -11,7 +11,7 @@ import (
 
 func Connect() (*mongo.Client, *mongo.Database, error) {
 	uri := getEnv("MONGO_URI", "mongodb://localhost:27017")
-	name := getEnv("MONGO_DB", "f3_laptopstore")
+	name := getEnv("MONGO_DB", "rapidtech")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
